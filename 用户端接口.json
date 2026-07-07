@@ -1,0 +1,176 @@
+[
+  {
+    "name": "用户认证",
+    "desc": "User Auth Controller",
+    "list": [
+      {
+        "method": "POST",
+        "title": "微信登录（登录即注册）",
+        "path": "/user/auth/login",
+        "req_body_other": "{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"string\",\"description\":\"微信登录凭证\"}},\"required\":[\"code\"]}",
+        "res_body": "{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"integer\"},\"data\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"openid\":{\"type\":\"string\"},\"token\":{\"type\":\"string\"}}},\"msg\":{\"type\":\"string\"}}}",
+        "req_query": [],
+        "req_params": []
+      },
+      {
+        "method": "POST",
+        "title": "发送手机验证码",
+        "path": "/user/auth/sendCode",
+        "req_body_other": "{\"type\":\"object\",\"properties\":{\"phone\":{\"type\":\"string\"}},\"required\":[\"phone\"]}",
+        "res_body": "{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"integer\"},\"data\":{\"type\":\"string\"},\"msg\":{\"type\":\"string\"}}}",
+        "req_query": [],
+        "req_params": []
+      },
+      {
+        "method": "POST",
+        "title": "手机号验证码登录（绑定）",
+        "path": "/user/auth/loginByPhone",
+        "req_body_other": "{\"type\":\"object\",\"properties\":{\"phone\":{\"type\":\"string\"},\"code\":{\"type\":\"string\"}},\"required\":[\"phone\",\"code\"]}",
+        "res_body": "{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"integer\"},\"data\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"phone\":{\"type\":\"string\"},\"token\":{\"type\":\"string\"}}},\"msg\":{\"type\":\"string\"}}}",
+        "req_query": [],
+        "req_params": []
+      },
+      {
+        "method": "POST",
+        "title": "用户登出",
+        "path": "/user/auth/logout",
+        "req_body_other": "{}",
+        "res_body": "{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"integer\"},\"data\":{\"type\":\"string\"},\"msg\":{\"type\":\"string\"}}}",
+        "req_query": [],
+        "req_params": []
+      }
+    ]
+  },
+  {
+    "name": "简历管理",
+    "desc": "Resume Controller",
+    "list": [
+      {
+        "method": "POST",
+        "title": "上传并解析简历",
+        "path": "/user/resume/upload",
+        "req_body_form": [
+          { "name": "file", "type": "file", "required": "1", "desc": "PDF或Word简历" }
+        ],
+        "res_body": "{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"integer\"},\"data\":{\"type\":\"object\",\"properties\":{\"resumeId\":{\"type\":\"integer\"},\"parsedData\":{\"type\":\"object\",\"properties\":{\"name\":{\"type\":\"string\"},\"school\":{\"type\":\"string\"},\"major\":{\"type\":\"string\"},\"degree\":{\"type\":\"string\"},\"skills\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"experienceYears\":{\"type\":\"integer\"},\"projects\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}}}},\"parsedTextPreview\":{\"type\":\"string\"}}},\"msg\":{\"type\":\"string\"}}}",
+        "req_headers": [
+          { "name": "Content-Type", "value": "multipart/form-data" }
+        ],
+        "req_query": [],
+        "req_params": []
+      },
+      {
+        "method": "GET",
+        "title": "获取最新简历",
+        "path": "/user/resume/latest",
+        "res_body": "{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"integer\"},\"data\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"fileName\":{\"type\":\"string\"},\"fileUrl\":{\"type\":\"string\"},\"parsedText\":{\"type\":\"string\"},\"structuredData\":{\"type\":\"object\"}}},\"msg\":{\"type\":\"string\"}}}",
+        "req_query": [],
+        "req_params": []
+      },
+      {
+        "method": "DELETE",
+        "title": "删除简历",
+        "path": "/user/resume",
+        "req_query": [{ "name": "id", "required": "1", "desc": "简历ID" }],
+        "res_body": "{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"integer\"},\"data\":{\"type\":\"string\"},\"msg\":{\"type\":\"string\"}}}",
+        "req_params": []
+      }
+    ]
+  },
+  {
+    "name": "AI模拟面试",
+    "desc": "Interview Controller",
+    "list": [
+      {
+        "method": "POST",
+        "title": "开始面试（生成首题）",
+        "path": "/user/interview/start",
+        "req_body_other": "{\"type\":\"object\",\"properties\":{\"resumeId\":{\"type\":\"integer\"},\"jobPosition\":{\"type\":\"string\"},\"difficulty\":{\"type\":\"string\",\"enum\":[\"easy\",\"medium\",\"hard\"]}},\"required\":[\"resumeId\",\"jobPosition\"]}",
+        "res_body": "{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"integer\"},\"data\":{\"type\":\"object\",\"properties\":{\"sessionId\":{\"type\":\"integer\"},\"firstQuestion\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"content\":{\"type\":\"string\"},\"timestamp\":{\"type\":\"string\"}}}}},\"msg\":{\"type\":\"string\"}}}",
+        "req_query": [],
+        "req_params": []
+      },
+      {
+        "method": "GET",
+        "title": "流式回答交互（SSE）",
+        "path": "/user/interview/stream",
+        "req_query": [
+          { "name": "sessionId", "required": "1", "desc": "会话ID" },
+          { "name": "answer", "required": "1", "desc": "用户回答" }
+        ],
+        "res_body": "（流式响应，事件流，非JSON）",
+        "req_params": []
+      },
+      {
+        "method": "POST",
+        "title": "结束面试（触发报告生成）",
+        "path": "/user/interview/end",
+        "req_body_other": "{\"type\":\"object\",\"properties\":{\"sessionId\":{\"type\":\"integer\"}},\"required\":[\"sessionId\"]}",
+        "res_body": "{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"integer\"},\"data\":{\"type\":\"object\",\"properties\":{\"reportId\":{\"type\":\"integer\"},\"status\":{\"type\":\"string\"},\"estimatedSeconds\":{\"type\":\"integer\"}}},\"msg\":{\"type\":\"string\"}}}",
+        "req_query": [],
+        "req_params": []
+      }
+    ]
+  },
+  {
+    "name": "评估报告",
+    "desc": "Report Controller",
+    "list": [
+      {
+        "method": "GET",
+        "title": "获取评估报告",
+        "path": "/user/report/{sessionId}",
+        "req_params": [{ "name": "sessionId", "example": "8001", "desc": "会话ID" }],
+        "res_body": "{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"integer\"},\"data\":{\"type\":\"object\",\"properties\":{\"reportId\":{\"type\":\"integer\"},\"overallScore\":{\"type\":\"number\"},\"dimensions\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"name\":{\"type\":\"string\"},\"score\":{\"type\":\"number\"},\"comment\":{\"type\":\"string\"}}}},\"improvementSuggestions\":{\"type\":\"string\"},\"generatedAt\":{\"type\":\"string\"}}},\"msg\":{\"type\":\"string\"}}}"
+      }
+    ]
+  },
+  {
+    "name": "RAG知识库问答",
+    "desc": "Knowledge Q&A Controller",
+    "list": [
+      {
+        "method": "POST",
+        "title": "知识库提问（流式SSE）",
+        "path": "/user/knowledge/ask",
+        "req_body_other": "{\"type\":\"object\",\"properties\":{\"question\":{\"type\":\"string\"},\"topK\":{\"type\":\"integer\"}},\"required\":[\"question\"]}",
+        "res_body": "（流式响应）",
+        "req_query": [],
+        "req_params": []
+      }
+    ]
+  },
+  {
+    "name": "用户中心",
+    "desc": "User Center Controller",
+    "list": [
+      {
+        "method": "GET",
+        "title": "获取用户基本信息",
+        "path": "/user/center/info",
+        "res_body": "{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"integer\"},\"data\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"nickname\":{\"type\":\"string\"},\"avatarUrl\":{\"type\":\"string\"},\"phone\":{\"type\":\"string\"}}},\"msg\":{\"type\":\"string\"}}}",
+        "req_query": [],
+        "req_params": []
+      },
+      {
+        "method": "PUT",
+        "title": "修改用户信息",
+        "path": "/user/center/info",
+        "req_body_other": "{\"type\":\"object\",\"properties\":{\"nickname\":{\"type\":\"string\"},\"avatarUrl\":{\"type\":\"string\"}},\"required\":[]}",
+        "res_body": "{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"integer\"},\"data\":{\"type\":\"string\"},\"msg\":{\"type\":\"string\"}}}",
+        "req_query": [],
+        "req_params": []
+      },
+      {
+        "method": "GET",
+        "title": "获取面试历史列表",
+        "path": "/user/center/sessions",
+        "req_query": [
+          { "name": "page", "required": "1", "example": "1" },
+          { "name": "pageSize", "required": "1", "example": "10" }
+        ],
+        "res_body": "{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"integer\"},\"data\":{\"type\":\"object\",\"properties\":{\"total\":{\"type\":\"integer\"},\"records\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"sessionId\":{\"type\":\"integer\"},\"jobPosition\":{\"type\":\"string\"},\"status\":{\"type\":\"string\"},\"overallScore\":{\"type\":\"number\"},\"createTime\":{\"type\":\"string\"}}}}}},\"msg\":{\"type\":\"string\"}}}"
+      }
+    ]
+  }
+]

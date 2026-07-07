@@ -1,0 +1,69 @@
+<view class="page">
+  <!-- 准备阶段 -->
+  <view wx:if="{{step === 'prepare'}}" class="prepare-section">
+    <view class="card">
+      <text class="section-title">开始 AI 面试</text>
+      <view class="form-group">
+        <text class="label">应聘岗位</text>
+        <picker bindchange="onJobChange" value="{{jobIndex}}" range="{{jobOptions}}">
+          <view class="picker {{jobPosition ? '' : 'placeholder'}}">
+            {{jobPosition || '请选择应聘岗位'}}
+          </view>
+        </picker>
+      </view>
+      <view class="form-group">
+        <text class="label">面试难度</text>
+        <view class="difficulty-options">
+          <view class="diff-option {{difficulty === 'easy' ? 'active' : ''}}" data-val="easy" bindtap="selectDifficulty">简单</view>
+          <view class="diff-option {{difficulty === 'medium' ? 'active' : ''}}" data-val="medium" bindtap="selectDifficulty">中等</view>
+          <view class="diff-option {{difficulty === 'hard' ? 'active' : ''}}" data-val="hard" bindtap="selectDifficulty">困难</view>
+        </view>
+      </view>
+      <view class="form-group">
+        <text class="label">使用简历</text>
+        <view class="resume-select" bindtap="chooseResume">
+          <text class="{{resumeText ? 'selected' : 'placeholder'}}">{{resumeText ? '已选择简历' : '点击上传/选择简历'}}</text>
+        </view>
+      </view>
+      <button class="btn-primary" bindtap="startInterview" disabled="{{!jobPosition}}">开始面试</button>
+    </view>
+  </view>
+
+  <!-- 面试进行中 -->
+  <view wx:if="{{step === 'interviewing'}}" class="interview-section">
+    <view class="chat-header">
+      <text class="chat-title">AI 面试官</text>
+      <text class="tag tag-blue">面试中</text>
+    </view>
+
+    <scroll-view class="chat-area" scroll-y scroll-into-view="msg-{{messages.length - 1}}" scroll-with-animation>
+      <view class="message-list">
+        <view class="msg-item {{item.role}}" wx:for="{{messages}}" wx:key="index" id="msg-{{index}}">
+          <view class="msg-avatar">{{item.role === 'assistant' ? '🤖' : '👤'}}</view>
+          <view class="msg-content">
+            <text class="msg-text">{{item.content}}</text>
+          </view>
+        </view>
+        <view class="msg-item assistant" wx:if="{{isTyping}}">
+          <view class="msg-avatar">🤖</view>
+          <view class="msg-content">
+            <view class="typing-indicator">
+              <view class="dot"></view>
+              <view class="dot"></view>
+              <view class="dot"></view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+
+    <view class="input-area">
+      <textarea class="answer-input" placeholder="请输入你的回答..." value="{{answer}}" bindinput="onAnswerInput" auto-height maxlength="500" />
+      <button class="send-btn" bindtap="sendAnswer" disabled="{{!answer || isTyping}}">发送</button>
+    </view>
+
+    <view class="end-btn-area">
+      <button class="btn-secondary" bindtap="endInterview">结束面试</button>
+    </view>
+  </view>
+</view>

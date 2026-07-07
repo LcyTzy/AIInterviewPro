@@ -1,0 +1,44 @@
+<view class="page">
+  <view class="filter-bar">
+    <view class="filter-item {{statusFilter === '' ? 'active' : ''}}" data-status="" bindtap="filterStatus">全部</view>
+    <view class="filter-item {{statusFilter === 'completed' ? 'active' : ''}}" data-status="completed" bindtap="filterStatus">已完成</view>
+    <view class="filter-item {{statusFilter === 'ongoing' ? 'active' : ''}}" data-status="ongoing" bindtap="filterStatus">进行中</view>
+  </view>
+
+  <view class="list-container">
+    <view class="card session-card" wx:for="{{sessions}}" wx:key="id" bindtap="goReport" data-id="{{item.id}}">
+      <view class="session-header">
+        <text class="session-position">{{item.jobPosition}}</text>
+        <text class="tag {{item.status === 'completed' ? 'tag-green' : 'tag-orange'}}">
+          {{item.status === 'completed' ? '已完成' : '进行中'}}
+        </text>
+      </view>
+      <view class="session-body">
+        <view class="session-info">
+          <text class="info-label">难度</text>
+          <text class="info-value">{{item.difficultyText}}</text>
+        </view>
+        <view class="session-info">
+          <text class="info-label">问答数</text>
+          <text class="info-value">{{item.questionCount}} 轮</text>
+        </view>
+        <view class="session-info">
+          <text class="info-label">时间</text>
+          <text class="info-value">{{item.startTimeText}}</text>
+        </view>
+      </view>
+      <view class="session-footer" wx:if="{{item.overallScore}}">
+        <text class="score-label">综合评分</text>
+        <text class="score-value">{{item.overallScore}}</text>
+      </view>
+    </view>
+
+    <view class="empty-tip" wx:if="{{sessions.length === 0 && !loading}}">
+      <text>暂无面试记录</text>
+    </view>
+
+    <view class="load-more" wx:if="{{hasMore}}">
+      <button class="btn-secondary" bindtap="loadMore" loading="{{loading}}">加载更多</button>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,37 @@
+<view class="page">
+  <view class="card upload-area" bindtap="chooseFile">
+    <view class="upload-icon">📤</view>
+    <text class="upload-title">点击上传简历</text>
+    <text class="upload-desc">支持 PDF、DOCX 格式</text>
+  </view>
+
+  <view class="card" wx:if="{{resume}}">
+    <view class="resume-header">
+      <text class="resume-title">我的简历</text>
+      <text class="tag tag-green">已上传</text>
+    </view>
+    <view class="resume-info">
+      <view class="info-row">
+        <text class="info-label">文件名</text>
+        <text class="info-value">{{resume.fileName}}</text>
+      </view>
+      <view class="info-row">
+        <text class="info-label">大小</text>
+        <text class="info-value">{{resume.fileSizeText}}</text>
+      </view>
+      <view class="info-row">
+        <text class="info-label">上传时间</text>
+        <text class="info-value">{{resume.createTime}}</text>
+      </view>
+    </view>
+    <view class="divider"></view>
+    <view class="parsed-section">
+      <text class="section-label">解析预览</text>
+      <text class="parsed-text">{{resume.parsedTextPreview}}</text>
+    </view>
+  </view>
+
+  <view class="empty-tip" wx:else>
+    <text>暂无简历，请上传</text>
+  </view>
+</view>

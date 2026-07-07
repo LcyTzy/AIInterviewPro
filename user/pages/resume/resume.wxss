@@ -1,0 +1,77 @@
+.page {
+  padding: 30rpx;
+}
+
+.upload-area {
+  text-align: center;
+  padding: 60rpx 30rpx;
+  border: 2rpx dashed #409EFF;
+  background: #f0f9ff;
+}
+
+.upload-icon {
+  font-size: 80rpx;
+  margin-bottom: 16rpx;
+}
+
+.upload-title {
+  display: block;
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #409EFF;
+  margin-bottom: 8rpx;
+}
+
+.upload-desc {
+  display: block;
+  font-size: 24rpx;
+  color: #999;
+}
+
+.resume-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+
+.resume-title {
+  font-size: 32rpx;
+  font-weight: bold;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 12rpx 0;
+}
+
+.info-label {
+  color: #999;
+  font-size: 28rpx;
+}
+
+.info-value {
+  color: #333;
+  font-size: 28rpx;
+  max-width: 60%;
+  text-align: right;
+}
+
+.parsed-section {
+  margin-top: 10rpx;
+}
+
+.section-label {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 12rpx;
+  display: block;
+}
+
+.parsed-text {
+  font-size: 26rpx;
+  color: #666;
+  line-height: 1.6;
+}

@@ -1,0 +1,67 @@
+<view class="page">
+  <!-- 顶部欢迎区 -->
+  <view class="header">
+    <view class="user-info" wx:if="{{userInfo}}">
+      <image class="avatar" src="{{userInfo.avatarUrl || '/static/default-avatar.png'}}" mode="aspectFill"></image>
+      <view class="user-text">
+        <text class="greeting">{{greeting}}</text>
+        <text class="nickname">{{userInfo.nickname}}</text>
+      </view>
+    </view>
+    <view class="user-info" wx:else bindtap="goLogin">
+      <view class="avatar-placeholder">👤</view>
+      <view class="user-text">
+        <text class="greeting">你好，请登录</text>
+        <text class="nickname">点击登录开始使用</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 快捷操作 -->
+  <view class="quick-actions">
+    <view class="action-card" bindtap="goResume">
+      <view class="action-icon">📄</view>
+      <text class="action-title">简历管理</text>
+      <text class="action-desc">上传/查看简历</text>
+    </view>
+    <view class="action-card" bindtap="goInterview">
+      <view class="action-icon">🤖</view>
+      <text class="action-title">开始面试</text>
+      <text class="action-desc">AI智能面试</text>
+    </view>
+    <view class="action-card" bindtap="goHistory">
+      <view class="action-icon">📋</view>
+      <text class="action-title">面试记录</text>
+      <text class="action-desc">查看历史记录</text>
+    </view>
+  </view>
+
+  <!-- 最近面试 -->
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">最近面试</text>
+      <text class="section-more" bindtap="goHistory">查看全部</text>
+    </view>
+    <view class="card" wx:if="{{recentSessions.length > 0}}">
+      <view class="session-item" wx:for="{{recentSessions}}" wx:key="id" bindtap="goReport" data-id="{{item.id}}">
+        <view class="session-main">
+          <text class="session-position">{{item.jobPosition}}</text>
+          <view class="session-meta">
+            <text class="tag {{item.status === 'completed' ? 'tag-green' : 'tag-orange'}}">
+              {{item.status === 'completed' ? '已完成' : '进行中'}}
+            </text>
+            <text class="session-time">{{item.startTime}}</text>
+          </view>
+        </view>
+        <view class="session-score" wx:if="{{item.overallScore}}">
+          <text class="score-num">{{item.overallScore}}</text>
+          <text class="score-label">分</text>
+        </view>
+      </view>
+    </view>
+    <view class="empty-tip" wx:else>
+      <text>暂无面试记录</text>
+      <button class="btn-primary" style="margin-top:30rpx;" bindtap="goInterview">开始第一次面试</button>
+    </view>
+  </view>
+</view>

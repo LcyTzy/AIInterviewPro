@@ -1,0 +1,46 @@
+<view class="page">
+  <view wx:if="{{loading}}" class="loading-container">
+    <text>加载中...</text>
+  </view>
+
+  <view wx:elif="{{report}}" class="report-container">
+    <view class="score-overview card">
+      <text class="section-title">综合评分</text>
+      <view class="total-score">
+        <text class="score-number">{{report.overallScore}}</text>
+        <text class="score-unit">/100</text>
+      </view>
+      <view class="score-level {{scoreLevel}}">{{scoreLevelText}}</view>
+    </view>
+
+    <view class="dimension-scores card">
+      <text class="section-title">维度评分</text>
+      <view class="dimension-item" wx:for="{{dimensions}}" wx:key="name">
+        <view class="dimension-header">
+          <text class="dimension-name">{{item.name}}</text>
+          <text class="dimension-score">{{item.score}}</text>
+        </view>
+        <view class="progress-bar">
+          <view class="progress-fill" style="width: {{item.score}}%"></view>
+        </view>
+      </view>
+    </view>
+
+    <view class="feedback card">
+      <text class="section-title">详细反馈</text>
+      <view class="feedback-item" wx:for="{{feedbackItems}}" wx:key="key">
+        <text class="feedback-label">{{item.label}}</text>
+        <text class="feedback-content">{{item.content}}</text>
+      </view>
+    </view>
+
+    <view class="suggestions card">
+      <text class="section-title">改进建议</text>
+      <text class="suggestions-content">{{report.improvementSuggestions}}</text>
+    </view>
+  </view>
+
+  <view wx:else class="empty-tip">
+    <text>暂无评估报告</text>
+  </view>
+</view>

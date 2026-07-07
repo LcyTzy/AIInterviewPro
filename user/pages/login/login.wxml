@@ -1,0 +1,31 @@
+<view class="login-page">
+  <view class="logo-area">
+    <view class="logo-icon">🤖</view>
+    <text class="logo-title">AI面试助手</text>
+    <text class="logo-subtitle">智能面试 · 高效求职</text>
+  </view>
+
+  <view class="login-card">
+    <button class="wx-login-btn" bindtap="wxLogin">
+      <text class="btn-icon"></text>
+      微信一键登录
+    </button>
+
+    <view class="divider-line">
+      <view class="line"></view>
+      <text>或</text>
+      <view class="line"></view>
+    </view>
+
+    <view class="phone-login">
+      <input class="input" type="number" maxlength="11" placeholder="请输入手机号" value="{{phone}}" bindinput="onPhoneInput" />
+      <view class="code-row">
+        <input class="input code-input" type="number" maxlength="6" placeholder="验证码" value="{{smsCode}}" bindinput="onCodeInput" />
+        <button class="sms-btn" disabled="{{smsDisabled}}" bindtap="sendSmsCode">
+          {{smsText}}
+        </button>
+      </view>
+      <button class="btn-primary" bindtap="phoneLogin">手机号登录</button>
+    </view>
+  </view>
+</view>

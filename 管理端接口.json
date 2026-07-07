@@ -1,0 +1,236 @@
+[
+  {
+    "name": "管理员认证",
+    "desc": "Admin Auth Controller",
+    "list": [
+      {
+        "method": "POST",
+        "title": "管理员登录",
+        "path": "/admin/login",
+        "req_body_other": "{\"type\":\"object\",\"properties\":{\"username\":{\"type\":\"string\"},\"password\":{\"type\":\"string\"}},\"required\":[\"username\",\"password\"]}",
+        "res_body": "{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"integer\",\"description\":\"200成功\"},\"data\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"username\":{\"type\":\"string\"},\"name\":{\"type\":\"string\"},\"token\":{\"type\":\"string\"}}},\"msg\":{\"type\":\"string\"}}}",
+        "req_query": [],
+        "req_params": []
+      },
+      {
+        "method": "POST",
+        "title": "管理员登出",
+        "path": "/admin/logout",
+        "req_body_other": "{}",
+        "res_body": "{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"integer\"},\"data\":{\"type\":\"string\"},\"msg\":{\"type\":\"string\"}}}",
+        "req_query": [],
+        "req_params": []
+      },
+      {
+        "method": "GET",
+        "title": "获取当前管理员信息",
+        "path": "/admin/info",
+        "res_body": "{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"integer\"},\"data\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"username\":{\"type\":\"string\"},\"name\":{\"type\":\"string\"},\"phone\":{\"type\":\"string\"},\"avatar\":{\"type\":\"string\"},\"role\":{\"type\":\"string\"}}},\"msg\":{\"type\":\"string\"}}}",
+        "req_query": [],
+        "req_params": []
+      },
+      {
+        "method": "PUT",
+        "title": "修改密码",
+        "path": "/admin/password",
+        "req_body_other": "{\"type\":\"object\",\"properties\":{\"oldPassword\":{\"type\":\"string\"},\"newPassword\":{\"type\":\"string\"}},\"required\":[\"oldPassword\",\"newPassword\"]}",
+        "res_body": "{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"integer\"},\"data\":{\"type\":\"string\"},\"msg\":{\"type\":\"string\"}}}",
+        "req_query": [],
+        "req_params": []
+      }
+    ]
+  },
+  {
+    "name": "面试记录管理",
+    "desc": "Interview Session Management",
+    "list": [
+      {
+        "method": "GET",
+        "title": "分页查询面试记录",
+        "path": "/admin/session/page",
+        "req_query": [
+          { "name": "userName", "required": "0", "desc": "用户昵称（模糊搜索）" },
+          { "name": "jobPosition", "required": "0", "desc": "岗位名称（模糊搜索）" },
+          { "name": "status", "required": "0", "desc": "ongoing/completed" },
+          { "name": "startTime", "required": "0", "desc": "开始日期 yyyy-MM-dd" },
+          { "name": "endTime", "required": "0", "desc": "结束日期 yyyy-MM-dd" },
+          { "name": "page", "required": "1", "example": "1" },
+          { "name": "pageSize", "required": "1", "example": "10" }
+        ],
+        "res_body": "{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"integer\"},\"data\":{\"type\":\"object\",\"properties\":{\"total\":{\"type\":\"integer\"},\"records\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"userName\":{\"type\":\"string\"},\"jobPosition\":{\"type\":\"string\"},\"difficulty\":{\"type\":\"string\"},\"status\":{\"type\":\"string\"},\"questionCount\":{\"type\":\"integer\"},\"startTime\":{\"type\":\"string\"},\"endTime\":{\"type\":\"string\"},\"overallScore\":{\"type\":\"number\"}}}}}},\"msg\":{\"type\":\"string\"}}}"
+      },
+      {
+        "method": "GET",
+        "title": "获取面试详情（含对话记录）",
+        "path": "/admin/session/{id}",
+        "req_params": [{ "name": "id", "example": "8001", "desc": "会话ID" }],
+        "res_body": "{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"integer\"},\"data\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"user\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"nickname\":{\"type\":\"string\"},\"phone\":{\"type\":\"string\"}}},\"resume\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"fileName\":{\"type\":\"string\"},\"parsedText\":{\"type\":\"string\"}}},\"jobPosition\":{\"type\":\"string\"},\"difficulty\":{\"type\":\"string\"},\"status\":{\"type\":\"string\"},\"messages\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"role\":{\"type\":\"string\"},\"content\":{\"type\":\"string\"},\"isQuestion\":{\"type\":\"boolean\"},\"createTime\":{\"type\":\"string\"}}}},\"report\":{\"type\":\"object\",\"properties\":{\"overallScore\":{\"type\":\"number\"},\"scoreLogic\":{\"type\":\"number\"},\"scoreDepth\":{\"type\":\"number\"},\"scoreMatch\":{\"type\":\"number\"},\"scoreCommunication\":{\"type\":\"number\"},\"improvementSuggestions\":{\"type\":\"string\"},\"detailedFeedback\":{\"type\":\"object\"}}}}},\"msg\":{\"type\":\"string\"}}}"
+      },
+      {
+        "method": "DELETE",
+        "title": "删除面试记录",
+        "path": "/admin/session",
+        "req_query": [{ "name": "id", "required": "1", "desc": "会话ID" }],
+        "res_body": "{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"integer\"},\"data\":{\"type\":\"string\"},\"msg\":{\"type\":\"string\"}}}",
+        "req_params": []
+      }
+    ]
+  },
+  {
+    "name": "统计与看板",
+    "desc": "Statistics Controller",
+    "list": [
+      {
+        "method": "GET",
+        "title": "热门岗位统计",
+        "path": "/admin/stats/hot-positions",
+        "req_query": [
+          { "name": "days", "required": "0", "example": "30", "desc": "最近天数，默认30" }
+        ],
+        "res_body": "{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"integer\"},\"data\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"position\":{\"type\":\"string\"},\"count\":{\"type\":\"integer\"}}}},\"msg\":{\"type\":\"string\"}}}"
+      },
+      {
+        "method": "GET",
+        "title": "每日面试量统计",
+        "path": "/admin/stats/daily-interviews",
+        "req_query": [
+          { "name": "begin", "required": "1", "desc": "开始日期 yyyy-MM-dd" },
+          { "name": "end", "required": "1", "desc": "结束日期 yyyy-MM-dd" }
+        ],
+        "res_body": "{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"integer\"},\"data\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"date\":{\"type\":\"string\"},\"totalSessions\":{\"type\":\"integer\"},\"completedSessions\":{\"type\":\"integer\"},\"avgScore\":{\"type\":\"number\"}}}},\"msg\":{\"type\":\"string\"}}}"
+      },
+      {
+        "method": "GET",
+        "title": "评分分布统计",
+        "path": "/admin/stats/score-distribution",
+        "req_query": [
+          { "name": "timeRange", "required": "0", "desc": "week/month/all，默认all" }
+        ],
+        "res_body": "{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"integer\"},\"data\":{\"type\":\"object\",\"properties\":{\"ranges\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"range\":{\"type\":\"string\"},\"count\":{\"type\":\"integer\"}}}}}},\"msg\":{\"type\":\"string\"}}}"
+      }
+    ]
+  },
+  {
+    "name": "用户管理",
+    "desc": "User Management",
+    "list": [
+      {
+        "method": "GET",
+        "title": "用户分页查询",
+        "path": "/admin/user/page",
+        "req_query": [
+          { "name": "nickname", "required": "0", "desc": "昵称（模糊搜索）" },
+          { "name": "phone", "required": "0", "desc": "手机号（模糊搜索）" },
+          { "name": "isActive", "required": "0", "desc": "1启用 0禁用" },
+          { "name": "page", "required": "1", "example": "1" },
+          { "name": "pageSize", "required": "1", "example": "10" }
+        ],
+        "res_body": "{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"integer\"},\"data\":{\"type\":\"object\",\"properties\":{\"total\":{\"type\":\"integer\"},\"records\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"nickname\":{\"type\":\"string\"},\"phone\":{\"type\":\"string\"},\"avatarUrl\":{\"type\":\"string\"},\"isActive\":{\"type\":\"boolean\"},\"lastLoginTime\":{\"type\":\"string\"},\"createTime\":{\"type\":\"string\"}}}}}},\"msg\":{\"type\":\"string\"}}}"
+      },
+      {
+        "method": "POST",
+        "title": "启用/禁用用户",
+        "path": "/admin/user/status/{status}",
+        "req_params": [{ "name": "status", "example": "1", "desc": "1启用 0禁用" }],
+        "req_query": [{ "name": "id", "required": "1", "desc": "用户ID" }],
+        "res_body": "{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"integer\"},\"data\":{\"type\":\"string\"},\"msg\":{\"type\":\"string\"}}}"
+      }
+    ]
+  },
+  {
+    "name": "简历管理",
+    "desc": "Resume Management",
+    "list": [
+      {
+        "method": "GET",
+        "title": "简历分页查询",
+        "path": "/admin/resume/page",
+        "req_query": [
+          { "name": "userName", "required": "0", "desc": "所属用户昵称" },
+          { "name": "fileName", "required": "0", "desc": "文件名（模糊搜索）" },
+          { "name": "page", "required": "1", "example": "1" },
+          { "name": "pageSize", "required": "1", "example": "10" }
+        ],
+        "res_body": "{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"integer\"},\"data\":{\"type\":\"object\",\"properties\":{\"total\":{\"type\":\"integer\"},\"records\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"userName\":{\"type\":\"string\"},\"fileName\":{\"type\":\"string\"},\"fileUrl\":{\"type\":\"string\"},\"parsedText\":{\"type\":\"string\"},\"structuredData\":{\"type\":\"object\"},\"createTime\":{\"type\":\"string\"}}}}}},\"msg\":{\"type\":\"string\"}}}"
+      },
+      {
+        "method": "DELETE",
+        "title": "删除简历",
+        "path": "/admin/resume",
+        "req_query": [{ "name": "id", "required": "1", "desc": "简历ID" }],
+        "res_body": "{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"integer\"},\"data\":{\"type\":\"string\"},\"msg\":{\"type\":\"string\"}}}",
+        "req_params": []
+      }
+    ]
+  },
+  {
+    "name": "知识库管理",
+    "desc": "Knowledge Base Management",
+    "list": [
+      {
+        "method": "POST",
+        "title": "新增知识文档",
+        "path": "/admin/knowledge",
+        "req_body_other": "{\"type\":\"object\",\"properties\":{\"title\":{\"type\":\"string\"},\"content\":{\"type\":\"string\"},\"category\":{\"type\":\"string\",\"enum\":[\"java\",\"computer_basics\",\"project\",\"database\"]},\"tags\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}}},\"required\":[\"title\",\"content\",\"category\"]}",
+        "res_body": "{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"integer\"},\"data\":{\"type\":\"string\"},\"msg\":{\"type\":\"string\"}}}",
+        "req_query": [],
+        "req_params": []
+      },
+      {
+        "method": "PUT",
+        "title": "修改知识文档",
+        "path": "/admin/knowledge",
+        "req_body_other": "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"title\":{\"type\":\"string\"},\"content\":{\"type\":\"string\"},\"category\":{\"type\":\"string\"},\"tags\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}}},\"required\":[\"id\"]}",
+        "res_body": "{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"integer\"},\"data\":{\"type\":\"string\"},\"msg\":{\"type\":\"string\"}}}",
+        "req_query": [],
+        "req_params": []
+      },
+      {
+        "method": "GET",
+        "title": "知识文档分页查询",
+        "path": "/admin/knowledge/page",
+        "req_query": [
+          { "name": "title", "required": "0", "desc": "标题（模糊搜索）" },
+          { "name": "category", "required": "0", "desc": "分类筛选" },
+          { "name": "page", "required": "1", "example": "1" },
+          { "name": "pageSize", "required": "1", "example": "10" }
+        ],
+        "res_body": "{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"integer\"},\"data\":{\"type\":\"object\",\"properties\":{\"total\":{\"type\":\"integer\"},\"records\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"title\":{\"type\":\"string\"},\"category\":{\"type\":\"string\"},\"tags\":{\"type\":\"array\"},\"isActive\":{\"type\":\"boolean\"},\"createTime\":{\"type\":\"string\"}}}}}},\"msg\":{\"type\":\"string\"}}}"
+      },
+      {
+        "method": "POST",
+        "title": "启用/禁用知识文档",
+        "path": "/admin/knowledge/status/{status}",
+        "req_params": [{ "name": "status", "example": "1", "desc": "1启用 0禁用" }],
+        "req_query": [{ "name": "id", "required": "1", "desc": "文档ID" }],
+        "res_body": "{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"integer\"},\"data\":{\"type\":\"string\"},\"msg\":{\"type\":\"string\"}}}"
+      },
+      {
+        "method": "DELETE",
+        "title": "删除知识文档",
+        "path": "/admin/knowledge",
+        "req_query": [{ "name": "id", "required": "1", "desc": "文档ID" }],
+        "res_body": "{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"integer\"},\"data\":{\"type\":\"string\"},\"msg\":{\"type\":\"string\"}}}",
+        "req_params": []
+      }
+    ]
+  },
+  {
+    "name": "通用接口",
+    "desc": "Common Controller",
+    "list": [
+      {
+        "method": "POST",
+        "title": "文件上传（OSS）",
+        "path": "/admin/common/upload",
+        "req_body_form": [{ "name": "file", "type": "file", "required": "1", "desc": "上传的文件" }],
+        "res_body": "{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"integer\"},\"data\":{\"type\":\"string\",\"description\":\"文件访问路径\"},\"msg\":{\"type\":\"string\"}}}",
+        "req_headers": [
+          { "name": "Content-Type", "value": "multipart/form-data" }
+        ],
+        "req_query": [],
+        "req_params": []
+      }
+    ]
+  }
+]
